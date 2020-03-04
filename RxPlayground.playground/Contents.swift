@@ -199,12 +199,12 @@ import RxCocoa
 //}
 
 // MARK: -- Behavior Subjects
-//enum MyError: Error {
-//    case anError
-//}
-//func printCustom<T: CustomStringConvertible>(label: String, event: Event<T>) {
-//    print(label, (event.element ?? event.error) ?? event)
-//}
+enum MyError: Error {
+    case anError
+}
+func printCustom<T: CustomStringConvertible>(label: String, event: Event<T>) {
+    print(label, (event.element ?? event.error) ?? event)
+}
 //
 //example(of: "Behavior Subject") {
 //    let subject = BehaviorSubject(value: "Initial value")
@@ -226,7 +226,38 @@ import RxCocoa
 
 //MARK: --REPLAY SUBJECT
 
-//example(of: <#T##String#>, action: <#T##() -> Void#>)
+example(of: "replay subject") {
+
+    let subject = ReplaySubject<String>.create(bufferSize: 2)
+    let disposeBag = DisposeBag()
+    
+    subject.onNext("1")
+    subject.onNext("2")
+    subject.onNext("3")
+    
+    subject.subscribe {
+       printCustom(label: "1)", event: $0)
+    }.disposed(by: disposeBag)
+    
+    subject.subscribe {
+        
+        printCustom(label: "2)", event: $0)
+    }.disposed(by: disposeBag)
+    
+    subject.onNext("4")
+    subject.onError(MyError.anError)
+    subject.dispose()
+    subject.subscribe {
+        printCustom(label: "3)", event: $0)
+    }.disposed(by: disposeBag)
+        
+}
+
+
+//MARK: -- RELAYS
+
+
+example(of: <#T##String#>, action: <#T##() -> Void#>)
 
 
 //example(of: <#T##String#>, action: <#T##() -> Void#>)
