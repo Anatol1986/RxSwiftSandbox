@@ -225,39 +225,71 @@ func printCustom<T: CustomStringConvertible>(label: String, event: Event<T>) {
 //}
 
 //MARK: --REPLAY SUBJECT
-
-example(of: "replay subject") {
-
-    let subject = ReplaySubject<String>.create(bufferSize: 2)
-    let disposeBag = DisposeBag()
-    
-    subject.onNext("1")
-    subject.onNext("2")
-    subject.onNext("3")
-    
-    subject.subscribe {
-       printCustom(label: "1)", event: $0)
-    }.disposed(by: disposeBag)
-    
-    subject.subscribe {
-        
-        printCustom(label: "2)", event: $0)
-    }.disposed(by: disposeBag)
-    
-    subject.onNext("4")
-    subject.onError(MyError.anError)
-    subject.dispose()
-    subject.subscribe {
-        printCustom(label: "3)", event: $0)
-    }.disposed(by: disposeBag)
-        
-}
+//
+//example(of: "replay subject") {
+//
+//    let subject = ReplaySubject<String>.create(bufferSize: 2)
+//    let disposeBag = DisposeBag()
+//
+//    subject.onNext("1")
+//    subject.onNext("2")
+//    subject.onNext("3")
+//
+//    subject.subscribe {
+//       printCustom(label: "1)", event: $0)
+//    }.disposed(by: disposeBag)
+//
+//    subject.subscribe {
+//
+//        printCustom(label: "2)", event: $0)
+//    }.disposed(by: disposeBag)
+//
+//    subject.onNext("4")
+//    subject.onError(MyError.anError)
+//    subject.dispose()
+//    subject.subscribe {
+//        printCustom(label: "3)", event: $0)
+//    }.disposed(by: disposeBag)
+//
+//}
 
 
 //MARK: -- RELAYS
+//Publisher can't send a .complete or .error event, only .onNext!!!
+//example(of: "Publish relay") {
+//    let relay = PublishRelay<String>()
+//    let disposeBag = DisposeBag()
+//
+//    relay.accept("Initial value")
+//    relay.subscribe(onNext: {
+//        print($0)
+//    })
+//    .disposed(by: disposeBag)
+//
+//    relay.accept("Second event")
+//
+//}
 
-
-example(of: <#T##String#>, action: <#T##() -> Void#>)
+//example(of: "Behavior relay") {
+//    let relay = BehaviorRelay(value: "Initial value")
+//    let disposeBag = DisposeBag()
+//    
+//    relay.accept("Second generated event")
+//    relay.subscribe {
+//        printCustom(label: "1)", event: $0)
+//    }.disposed(by: disposeBag)
+//    
+//    relay.accept("Third generated event")
+//    
+//    relay.subscribe {
+//        printCustom(label: "2)", event: $0)
+//        } .disposed(by: disposeBag)
+//    
+//    relay.accept("Fourth generated event")
+//    
+//    //Direct access to Relay current value:
+//    print(relay.value)
+//}
 
 
 //example(of: <#T##String#>, action: <#T##() -> Void#>)
